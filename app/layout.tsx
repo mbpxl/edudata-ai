@@ -1,8 +1,8 @@
 import { Geist_Mono, Inter } from "next/font/google"
 
-import "./globals.css"
+import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Container, Header } from "@/components/shared";
+import { Header } from "@/components/shared";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -22,7 +22,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
-      <body className="bg-blue-50">
+      <body>
         <Header />
         {children}
       </body>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Brain } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Container } from "./container";
+import { Container } from ".";
 
 type Props = {
   className?: string;
@@ -50,8 +50,8 @@ export const Header: React.FC<Props> = ({ className }) => {
               Загрузить
             </Link>
             <Link
-              href="/results"
-              className={`transition-colors ${isActive("/results")
+              href="/analytics"
+              className={`transition-colors ${isActive("/analytics")
                 ? "text-blue-600 font-medium"
                 : "text-muted-foreground hover:text-foreground"
                 }`}

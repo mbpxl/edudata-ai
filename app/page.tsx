@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 
-export default function Page() {
+export default function MainPage() {
   return (
     <main>
-      <Container>
-        <section className="grid md:grid-cols-2 gap-12 items-center bg-blue-50 pb-13">
+      <section className="bg-blue-50 pb-13">
+        <Container className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <AiInfoTitle className="mt-10" />
             <Title size="xl" className="font-extrabold mb-5" text={"Персонализируйте обучение студентов с помощью ИИ"} />
@@ -32,8 +32,10 @@ export default function Page() {
               alt="intro"
             />
           </div>
-        </section>
+        </Container>
+      </section>
 
+      <Container>
         <CenteredLayout
           className="my-17"
           heading={"Интеллектуальный анализ данных"}
@@ -46,6 +48,8 @@ export default function Page() {
           <Card title={"Персонализированные инсайты"} text={"Получайте индивидуальные рекомендации для каждого студента на основе их уникального профиля обучения"} icon={Users} bgColor={"green"} />
         </section>
       </Container>
+
+
       <section className="py-20 bg-linear-to-br from-blue-600 via-purple-600 to-blue-700 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">

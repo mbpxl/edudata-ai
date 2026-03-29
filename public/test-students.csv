@@ -1,0 +1,21 @@
+id,name,email,math,physics,chemistry,biology,literature,history,english,attendance,behavior,participation,homework
+1,Иван Петров,ivan.petrov@school.com,85,90,78,88,75,80,82,95,8,7,90
+2,Мария Сидорова,maria.sidorova@school.com,92,88,95,90,98,96,94,98,9,10,95
+3,Алексей Смирнов,alex.smirnov@school.com,70,65,68,72,85,88,80,85,6,5,75
+4,Екатерина Новикова,kate.novikova@school.com,95,92,90,88,82,78,85,92,10,9,88
+5,Дмитрий Волков,dmitry.volkov@school.com,78,82,75,80,70,72,68,80,7,6,70
+6,Анна Соколова,anna.sokolova@school.com,88,85,92,95,90,88,92,96,9,8,92
+7,Сергей Морозов,sergey.morozov@school.com,65,70,72,68,78,82,75,78,6,5,65
+8,Ольга Павлова,olga.pavlova@school.com,90,88,85,82,95,92,90,94,10,9,90
+9,Николай Федоров,nikolay.fedorov@school.com,72,75,70,78,68,70,72,75,7,6,72
+10,Юлия Кузнецова,julia.kuznetsova@school.com,98,95,92,90,88,85,90,95,10,10,98
+11,Андрей Михайлов,andrey.mikhailov@school.com,68,72,65,70,75,78,70,72,6,5,68
+12,Виктория Белова,victoria.belova@school.com,85,88,90,85,92,88,85,88,9,8,85
+13,Павел Егоров,pavel.egorov@school.com,75,78,72,75,80,82,78,80,7,7,75
+14,Татьяна Романова,tatiana.romanova@school.com,92,90,88,92,95,90,92,94,10,9,92
+15,Максим Козлов,maxim.kozlov@school.com,70,68,75,72,65,70,68,70,6,5,70
+16,Елена Семенова,elena.semenova@school.com,88,92,85,88,90,85,88,90,9,8,88
+17,Артем Лебедев,artem.lebedev@school.com,82,80,78,82,75,78,80,82,8,7,82
+18,Наталья Попова,natalia.popova@school.com,95,92,90,95,92,88,90,92,10,9,95
+19,Владимир Захаров,vladimir.zakharov@school.com,65,70,68,65,72,75,70,68,6,5,65
+20,Светлана Васильева,svetlana.vasileva@school.com,90,88,92,90,88,85,88,90,9,8,90

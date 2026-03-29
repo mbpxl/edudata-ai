@@ -1,6 +1,14 @@
+export { ActionPlan } from "./action-plan";
 export { Container } from "./container";
 export { Header } from "./header";
 export { AiInfoTitle } from "./ai-info-title";
 export { Title } from "./title";
 export { Card } from "./card";
 export { CenteredLayout } from "./centered-layout";
+export { Charts } from "./charts";
+export { ClassOverview } from "./class-overview";
+export { StudentsTable } from "./students-table";
+export { ProblemTopics } from "./problem-topics";
+export { Recommendations } from "./recomendations";
+export { StrengthsWeaknesses } from "./strengths-weaknesses";
+export { StudentProfile } from "./student-profile";

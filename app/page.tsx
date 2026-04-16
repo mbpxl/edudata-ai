@@ -1,5 +1,5 @@
 import { AiInfoTitle, Card, CenteredLayout, Container, Title } from "@/components/shared";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { ArrowRight, Brain, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 

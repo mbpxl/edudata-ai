@@ -11,21 +11,21 @@ import { parseSubjectBreakdown, getProblemTopics, calculateAverageGrade } from '
 export async function POST(request: NextRequest) {
   try {
     const { student } = await request.json() as { student: Student };
-    
+
     if (!student || !student.id || !student.name) {
       return NextResponse.json<AnalyzeStudentResponse>(
         { success: false, error: 'Invalid student data provided' },
         { status: 400 }
       );
     }
-    
+
     console.log(`Analyzing student: ${student.name} (${student.id})`);
-    
+
     // Prepare detailed breakdown
     const subjectBreakdown = parseSubjectBreakdown(student);
     const problemTopics = getProblemTopics(student, 75);
     const averageGrade = calculateAverageGrade(student);
-    
+
     // Create detailed prompt for DeepSeek
     const prompt = `
 Ты - опытный педагог-аналитик с 20-летним стажем. Проанализируй данные конкретного студента.
@@ -47,9 +47,9 @@ ${s.topics.map(t => `    - ${t.name}: ${t.grade} (${t.status})`).join('\n')}
 `).join('\n')}
 
 ПРОБЛЕМНЫЕ ТЕМЫ (оценка < 75):
-${problemTopics.length > 0 
-  ? problemTopics.map(p => `- ${p.subject} / ${p.topic}: ${p.grade}`).join('\n')
-  : 'Нет проблемных тем'}
+${problemTopics.length > 0
+        ? problemTopics.map(p => `- ${p.subject} / ${p.topic}: ${p.grade}`).join('\n')
+        : 'Нет проблемных тем'}
 
 ЗАДАЧА:
 Проведи глубокий анализ студента и предоставь:
@@ -104,51 +104,51 @@ ${problemTopics.length > 0
 
     // Call DeepSeek API
     let analysis: StudentDetailedAnalysis;
-    
+
     try {
       analysis = await deepseek.chatJSON<StudentDetailedAnalysis>(prompt, {
         temperature: 0.7,
-        maxTokens: 4000
+        maxTokens: 8000,
       });
     } catch (aiError: any) {
       console.error('DeepSeek API error:', aiError);
       return NextResponse.json<AnalyzeStudentResponse>(
-        { 
-          success: false, 
-          error: `AI analysis failed: ${aiError.message}` 
+        {
+          success: false,
+          error: `AI analysis failed: ${aiError.message}`
         },
         { status: 500 }
       );
     }
-    
+
     // Validate response structure
     if (!analysis.studentId || !analysis.studentName) {
       console.error('Invalid analysis structure:', analysis);
       return NextResponse.json<AnalyzeStudentResponse>(
-        { 
-          success: false, 
-          error: 'AI returned invalid data structure' 
+        {
+          success: false,
+          error: 'AI returned invalid data structure'
         },
         { status: 500 }
       );
     }
-    
+
     console.log(`Student analysis completed for ${student.name}`);
-    
+
     return NextResponse.json<AnalyzeStudentResponse>(
-      { 
-        success: true, 
-        data: analysis 
+      {
+        success: true,
+        data: analysis
       },
       { status: 200 }
     );
-    
+
   } catch (error: any) {
     console.error('Unexpected error in analyze-student:', error);
     return NextResponse.json<AnalyzeStudentResponse>(
-      { 
-        success: false, 
-        error: 'Internal server error' 
+      {
+        success: false,
+        error: 'Internal server error'
       },
       { status: 500 }
     );

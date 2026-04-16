@@ -10,16 +10,16 @@ import { StudentDetailedAnalysis, StudentRecommendations, RecommendationsRespons
 export async function POST(request: NextRequest) {
   try {
     const { analysis } = await request.json() as { analysis: StudentDetailedAnalysis };
-    
+
     if (!analysis || !analysis.studentId || !analysis.studentName) {
       return NextResponse.json<RecommendationsResponse>(
         { success: false, error: 'Invalid analysis data provided' },
         { status: 400 }
       );
     }
-    
+
     console.log(`Generating recommendations for: ${analysis.studentName}`);
-    
+
     // Create detailed prompt for DeepSeek
     const prompt = `
 Ты - опытный педагог и методист. На основе детального анализа студента создай персонализированные рекомендации.
@@ -40,9 +40,9 @@ ${analysis.weaknesses.map(w => `- ${w}`).join('\n')}
 ${analysis.focusAreas.map(f => `- ${f}`).join('\n')}
 
 Проблемные темы:
-${analysis.problemTopics?.map(p => 
-  `- ${p.subject} / ${p.topic}: ${p.currentGrade} → ${p.targetGrade} (приоритет: ${p.priority})`
-).join('\n') || 'Нет'}
+${analysis.problemTopics?.map(p =>
+      `- ${p.subject} / ${p.topic}: ${p.currentGrade} → ${p.targetGrade} (приоритет: ${p.priority})`
+    ).join('\n') || 'Нет'}
 
 ЗАДАЧА:
 Создай персонализированный план обучения с конкретными темами, ресурсами и планом действий.
@@ -112,51 +112,51 @@ ${analysis.problemTopics?.map(p =>
 
     // Call DeepSeek API
     let recommendations: StudentRecommendations;
-    
+
     try {
       recommendations = await deepseek.chatJSON<StudentRecommendations>(prompt, {
         temperature: 0.8, // Slightly higher for creativity in recommendations
-        maxTokens: 4000
+        maxTokens: 8000,
       });
     } catch (aiError: any) {
       console.error('DeepSeek API error:', aiError);
       return NextResponse.json<RecommendationsResponse>(
-        { 
-          success: false, 
-          error: `AI recommendation generation failed: ${aiError.message}` 
+        {
+          success: false,
+          error: `AI recommendation generation failed: ${aiError.message}`
         },
         { status: 500 }
       );
     }
-    
+
     // Validate response structure
     if (!recommendations.studentId || !recommendations.topicsToStudy || !recommendations.actionPlan) {
       console.error('Invalid recommendations structure:', recommendations);
       return NextResponse.json<RecommendationsResponse>(
-        { 
-          success: false, 
-          error: 'AI returned invalid data structure' 
+        {
+          success: false,
+          error: 'AI returned invalid data structure'
         },
         { status: 500 }
       );
     }
-    
+
     console.log(`Recommendations generated for ${analysis.studentName}`);
-    
+
     return NextResponse.json<RecommendationsResponse>(
-      { 
-        success: true, 
-        data: recommendations 
+      {
+        success: true,
+        data: recommendations
       },
       { status: 200 }
     );
-    
+
   } catch (error: any) {
     console.error('Unexpected error in generate-recommendations:', error);
     return NextResponse.json<RecommendationsResponse>(
-      { 
-        success: false, 
-        error: 'Internal server error' 
+      {
+        success: false,
+        error: 'Internal server error'
       },
       { status: 500 }
     );

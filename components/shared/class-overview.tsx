@@ -1,15 +1,15 @@
 "use client"
 
-import { ClassAnalytics } from "@/lib/types";
-import { Users, TrendingUp, Calendar, Award, AlertCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui";
+import { ClassAnalytics } from "@/lib/types"
+import { Users, TrendingUp, Calendar, Award, AlertCircle } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui"
 
 interface ClassOverviewProps {
-  analytics: ClassAnalytics;
+  analytics: ClassAnalytics
 }
 
 export const ClassOverview = ({ analytics }: ClassOverviewProps) => {
-  const { overview } = analytics;
+  const { overview } = analytics
 
   const metrics = [
     {
@@ -33,44 +33,44 @@ export const ClassOverview = ({ analytics }: ClassOverviewProps) => {
       bgColor: "bg-green-50",
       textColor: "text-green-600",
     },
-  ];
+  ]
 
   return (
     <div className="space-y-6">
-      {/* Main metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {metrics.map((metric) => {
-          const Icon = metric.icon;
+          const Icon = metric.icon
           return (
-            <Card key={metric.label} className="hover:shadow-xl transition-shadow">
+            <Card
+              key={metric.label}
+              className="transition-shadow hover:shadow-xl"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground mb-1">
+                    <p className="mb-1 text-sm font-medium text-muted-foreground">
                       {metric.label}
                     </p>
-                    <p className="text-3xl font-bold">
-                      {metric.value}
-                    </p>
+                    <p className="text-3xl font-bold">{metric.value}</p>
                   </div>
-                  <div className={`w-14 h-14 rounded-xl ${metric.bgColor} flex items-center justify-center`}>
-                    <Icon className={`w-7 h-7 ${metric.textColor}`} />
+                  <div
+                    className={`h-14 w-14 rounded-xl ${metric.bgColor} flex items-center justify-center`}
+                  >
+                    <Icon className={`h-7 w-7 ${metric.textColor}`} />
                   </div>
                 </div>
               </CardContent>
             </Card>
-          );
+          )
         })}
       </div>
 
-      {/* Top performers and needs attention */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Top performers */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
-                <Award className="w-5 h-5 text-white" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500">
+                <Award className="h-5 w-5 text-white" />
               </div>
               <span>Лучшие студенты</span>
             </CardTitle>
@@ -80,26 +80,23 @@ export const ClassOverview = ({ analytics }: ClassOverviewProps) => {
               {overview.topPerformers.slice(0, 5).map((student, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200"
+                  className="flex items-center gap-3 rounded-lg border border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50 p-3"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 text-sm font-bold text-white">
                     {index + 1}
                   </div>
-                  <span className="text-sm font-medium">
-                    {student}
-                  </span>
+                  <span className="text-sm font-medium">{student}</span>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Needs attention */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center">
-                <AlertCircle className="w-5 h-5 text-white" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-400 to-pink-500">
+                <AlertCircle className="h-5 w-5 text-white" />
               </div>
               <span>Требуют внимания</span>
             </CardTitle>
@@ -110,14 +107,12 @@ export const ClassOverview = ({ analytics }: ClassOverviewProps) => {
                 overview.needsAttention.slice(0, 5).map((student, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 bg-gradient-to-r from-red-50 to-pink-50 rounded-lg border border-red-200"
+                    className="flex items-center gap-3 rounded-lg border border-red-200 bg-gradient-to-r from-red-50 to-pink-50 p-3"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center">
-                      <AlertCircle className="w-4 h-4 text-white" />
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-red-400 to-pink-500">
+                      <AlertCircle className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium">
-                      {student}
-                    </span>
+                    <span className="text-sm font-medium">{student}</span>
                   </div>
                 ))
               ) : (
@@ -130,5 +125,5 @@ export const ClassOverview = ({ analytics }: ClassOverviewProps) => {
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}

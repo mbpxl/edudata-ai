@@ -1,38 +1,30 @@
-/**
- * API Route: /api/analyze-class
- * Analyzes entire class data using DeepSeek AI
- * Returns class-level analytics and quick recommendations for each student
- */
-
-import { NextRequest, NextResponse } from 'next/server';
-import { deepseek } from '@/lib/deepseek';
-import { Student, ClassAnalytics, AnalyzeClassResponse } from '@/lib/types';
+import { NextRequest, NextResponse } from "next/server"
+import { deepseek } from "@/lib/deepseek"
+import { Student, ClassAnalytics, AnalyzeClassResponse } from "@/lib/types"
 
 export async function POST(request: NextRequest) {
   try {
-    const { students } = await request.json() as { students: Student[] };
+    const { students } = (await request.json()) as { students: Student[] }
 
     if (!students || !Array.isArray(students) || students.length === 0) {
       return NextResponse.json<AnalyzeClassResponse>(
-        { success: false, error: 'No students data provided' },
+        { success: false, error: "No students data provided" },
         { status: 400 }
-      );
+      )
     }
 
-    console.log(`Analyzing class with ${students.length} students...`);
+    console.log(`Analyzing class with ${students.length} students...`)
 
-    // Prepare data summary for DeepSeek (optimize token usage)
-    const studentsSummary = students.map(s => ({
+    const studentsSummary = students.map((s) => ({
       id: s.id,
       name: s.name,
       grades: s.grades,
       attendance: s.attendance,
       behavior: s.behaviorScore,
       participation: s.participationScore,
-      homework: s.homeworkCompletion
-    }));
+      homework: s.homeworkCompletion,
+    }))
 
-    // Create prompt for DeepSeek
     const prompt = `
 Ты - опытный педагог-аналитик. Проанализируй данные класса из ${students.length} студентов.
 
@@ -71,10 +63,9 @@ ${JSON.stringify(studentsSummary, null, 2)}
     }
   ]
 }
-`;
+`
 
-    // Call DeepSeek API
-    let analytics: ClassAnalytics;
+    let analytics: ClassAnalytics
 
     try {
       analytics = await deepseek.chatJSON<ClassAnalytics>(prompt, {
@@ -82,59 +73,56 @@ ${JSON.stringify(studentsSummary, null, 2)}
         maxTokens: 8000,
       });
     } catch (aiError: any) {
-      console.error('DeepSeek API error:', aiError);
+      console.error("DeepSeek API error:", aiError)
       return NextResponse.json<AnalyzeClassResponse>(
         {
           success: false,
-          error: `AI analysis failed: ${aiError.message}`
+          error: `AI analysis failed: ${aiError.message}`,
         },
         { status: 500 }
-      );
+      )
     }
 
-    // Validate response structure
     if (!analytics.overview || !analytics.studentsQuickRecommendations) {
-      console.error('Invalid analytics structure:', analytics);
+      console.error("Invalid analytics structure:", analytics)
       return NextResponse.json<AnalyzeClassResponse>(
         {
           success: false,
-          error: 'AI returned invalid data structure'
+          error: "AI returned invalid data structure",
         },
         { status: 500 }
-      );
+      )
     }
 
-    console.log('Class analysis completed successfully');
+    console.log("Class analysis completed successfully")
 
     return NextResponse.json<AnalyzeClassResponse>(
       {
         success: true,
-        data: analytics
+        data: analytics,
       },
       { status: 200 }
-    );
-
+    )
   } catch (error: any) {
-    console.error('Unexpected error in analyze-class:', error);
+    console.error("Unexpected error in analyze-class:", error)
     return NextResponse.json<AnalyzeClassResponse>(
       {
         success: false,
-        error: 'Internal server error'
+        error: "Internal server error",
       },
       { status: 500 }
-    );
+    )
   }
 }
 
-// GET endpoint for API info
 export async function GET() {
   return NextResponse.json({
-    message: 'Class Analysis API',
-    description: 'Analyzes student class data using DeepSeek AI',
-    endpoint: '/api/analyze-class',
-    method: 'POST',
+    message: "Class Analysis API",
+    description: "Analyzes student class data using DeepSeek AI",
+    endpoint: "/api/analyze-class",
+    method: "POST",
     requiredBody: {
-      students: 'Student[]'
-    }
-  });
+      students: "Student[]",
+    },
+  })
 }

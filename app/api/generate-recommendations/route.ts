@@ -1,26 +1,26 @@
-/**
- * API Route: /api/generate-recommendations
- * Generates personalized study recommendations based on student analysis
- */
-
-import { NextRequest, NextResponse } from 'next/server';
-import { deepseek } from '@/lib/deepseek';
-import { StudentDetailedAnalysis, StudentRecommendations, RecommendationsResponse } from '@/lib/types';
+import { NextRequest, NextResponse } from "next/server"
+import { deepseek } from "@/lib/deepseek"
+import {
+  StudentDetailedAnalysis,
+  StudentRecommendations,
+  RecommendationsResponse,
+} from "@/lib/types"
 
 export async function POST(request: NextRequest) {
   try {
-    const { analysis } = await request.json() as { analysis: StudentDetailedAnalysis };
-    
+    const { analysis } = (await request.json()) as {
+      analysis: StudentDetailedAnalysis
+    }
+
     if (!analysis || !analysis.studentId || !analysis.studentName) {
       return NextResponse.json<RecommendationsResponse>(
-        { success: false, error: 'Invalid analysis data provided' },
+        { success: false, error: "Invalid analysis data provided" },
         { status: 400 }
-      );
+      )
     }
-    
-    console.log(`Generating recommendations for: ${analysis.studentName}`);
-    
-    // Create detailed prompt for DeepSeek
+
+    console.log(`Generating recommendations for: ${analysis.studentName}`)
+
     const prompt = `
 Ты - опытный педагог и методист. На основе детального анализа студента создай персонализированные рекомендации.
 
@@ -28,21 +28,26 @@ export async function POST(request: NextRequest) {
 Имя: ${analysis.studentName}
 Общая характеристика: ${analysis.overallAssessment}
 Текущий уровень: ${analysis.currentLevel}
-Стиль обучения: ${analysis.learningStyle || 'не определен'}
+Стиль обучения: ${analysis.learningStyle || "не определен"}
 
 Сильные стороны:
-${analysis.strengths.map(s => `- ${s}`).join('\n')}
+${analysis.strengths.map((s) => `- ${s}`).join("\n")}
 
 Слабые стороны:
-${analysis.weaknesses.map(w => `- ${w}`).join('\n')}
+${analysis.weaknesses.map((w) => `- ${w}`).join("\n")}
 
 Области для работы:
-${analysis.focusAreas.map(f => `- ${f}`).join('\n')}
+${analysis.focusAreas.map((f) => `- ${f}`).join("\n")}
 
 Проблемные темы:
-${analysis.problemTopics?.map(p => 
-  `- ${p.subject} / ${p.topic}: ${p.currentGrade} → ${p.targetGrade} (приоритет: ${p.priority})`
-).join('\n') || 'Нет'}
+${
+  analysis.problemTopics
+    ?.map(
+      (p) =>
+        `- ${p.subject} / ${p.topic}: ${p.currentGrade} → ${p.targetGrade} (приоритет: ${p.priority})`
+    )
+    .join("\n") || "Нет"
+}
 
 ЗАДАЧА:
 Создай персонализированный план обучения с конкретными темами, ресурсами и планом действий.
@@ -108,70 +113,74 @@ ${analysis.problemTopics?.map(p =>
   },
   "motivationalMessage": "Персональное мотивационное сообщение студенту"
 }
-`;
+`
 
-    // Call DeepSeek API
-    let recommendations: StudentRecommendations;
-    
+    let recommendations: StudentRecommendations
+
     try {
-      recommendations = await deepseek.chatJSON<StudentRecommendations>(prompt, {
-        temperature: 0.8, // Slightly higher for creativity in recommendations
-        maxTokens: 4000
-      });
+      recommendations = await deepseek.chatJSON<StudentRecommendations>(
+        prompt,
+        {
+          temperature: 0.8,
+          maxTokens: 4000,
+        }
+      )
     } catch (aiError: any) {
-      console.error('DeepSeek API error:', aiError);
+      console.error("DeepSeek API error:", aiError)
       return NextResponse.json<RecommendationsResponse>(
-        { 
-          success: false, 
-          error: `AI recommendation generation failed: ${aiError.message}` 
+        {
+          success: false,
+          error: `AI recommendation generation failed: ${aiError.message}`,
         },
         { status: 500 }
-      );
+      )
     }
-    
-    // Validate response structure
-    if (!recommendations.studentId || !recommendations.topicsToStudy || !recommendations.actionPlan) {
-      console.error('Invalid recommendations structure:', recommendations);
+
+    if (
+      !recommendations.studentId ||
+      !recommendations.topicsToStudy ||
+      !recommendations.actionPlan
+    ) {
+      console.error("Invalid recommendations structure:", recommendations)
       return NextResponse.json<RecommendationsResponse>(
-        { 
-          success: false, 
-          error: 'AI returned invalid data structure' 
+        {
+          success: false,
+          error: "AI returned invalid data structure",
         },
         { status: 500 }
-      );
+      )
     }
-    
-    console.log(`Recommendations generated for ${analysis.studentName}`);
-    
+
+    console.log(`Recommendations generated for ${analysis.studentName}`)
+
     return NextResponse.json<RecommendationsResponse>(
-      { 
-        success: true, 
-        data: recommendations 
+      {
+        success: true,
+        data: recommendations,
       },
       { status: 200 }
-    );
-    
+    )
   } catch (error: any) {
-    console.error('Unexpected error in generate-recommendations:', error);
+    console.error("Unexpected error in generate-recommendations:", error)
     return NextResponse.json<RecommendationsResponse>(
-      { 
-        success: false, 
-        error: 'Internal server error' 
+      {
+        success: false,
+        error: "Internal server error",
       },
       { status: 500 }
-    );
+    )
   }
 }
 
-// GET endpoint for API info
 export async function GET() {
   return NextResponse.json({
-    message: 'Recommendations Generation API',
-    description: 'Generates personalized study recommendations based on student analysis',
-    endpoint: '/api/generate-recommendations',
-    method: 'POST',
+    message: "Recommendations Generation API",
+    description:
+      "Generates personalized study recommendations based on student analysis",
+    endpoint: "/api/generate-recommendations",
+    method: "POST",
     requiredBody: {
-      analysis: 'StudentDetailedAnalysis object'
-    }
-  });
+      analysis: "StudentDetailedAnalysis object",
+    },
+  })
 }

@@ -1,55 +1,64 @@
-/**
- * API Route: /api/analyze-student
- * Provides detailed analysis of a specific student using DeepSeek AI
- */
-
-import { NextRequest, NextResponse } from 'next/server';
-import { deepseek } from '@/lib/deepseek';
-import { Student, StudentDetailedAnalysis, AnalyzeStudentResponse } from '@/lib/types';
-import { parseSubjectBreakdown, getProblemTopics, calculateAverageGrade } from '@/lib/student-utils';
+import { NextRequest, NextResponse } from "next/server"
+import { deepseek } from "@/lib/deepseek"
+import {
+  Student,
+  StudentDetailedAnalysis,
+  AnalyzeStudentResponse,
+} from "@/lib/types"
+import {
+  parseSubjectBreakdown,
+  getProblemTopics,
+  calculateAverageGrade,
+} from "@/lib/student-utils"
 
 export async function POST(request: NextRequest) {
   try {
-    const { student } = await request.json() as { student: Student };
-    
+    const { student } = (await request.json()) as { student: Student }
+
     if (!student || !student.id || !student.name) {
       return NextResponse.json<AnalyzeStudentResponse>(
-        { success: false, error: 'Invalid student data provided' },
+        { success: false, error: "Invalid student data provided" },
         { status: 400 }
-      );
+      )
     }
-    
-    console.log(`Analyzing student: ${student.name} (${student.id})`);
-    
-    // Prepare detailed breakdown
-    const subjectBreakdown = parseSubjectBreakdown(student);
-    const problemTopics = getProblemTopics(student, 75);
-    const averageGrade = calculateAverageGrade(student);
-    
-    // Create detailed prompt for DeepSeek
+
+    console.log(`Analyzing student: ${student.name} (${student.id})`)
+
+    const subjectBreakdown = parseSubjectBreakdown(student)
+    const problemTopics = getProblemTopics(student, 75)
+    const averageGrade = calculateAverageGrade(student)
+
     const prompt = `
 Ты - опытный педагог-аналитик с 20-летним стажем. Проанализируй данные конкретного студента.
 
 ДАННЫЕ СТУДЕНТА:
 Имя: ${student.name}
-Email: ${student.email || 'не указан'}
+Email: ${student.email || "не указан"}
 Средний балл: ${averageGrade.toFixed(1)}
-Посещаемость: ${student.attendance || 'н/д'}%
-Поведение (1-10): ${student.behaviorScore || 'н/д'}
-Участие в уроках (1-10): ${student.participationScore || 'н/д'}
-Выполнение домашних заданий: ${student.homeworkCompletion || 'н/д'}%
+Посещаемость: ${student.attendance || "н/д"}%
+Поведение (1-10): ${student.behaviorScore || "н/д"}
+Участие в уроках (1-10): ${student.participationScore || "н/д"}
+Выполнение домашних заданий: ${student.homeworkCompletion || "н/д"}%
 
 ДЕТАЛЬНАЯ УСПЕВАЕМОСТЬ ПО ПРЕДМЕТАМ:
-${subjectBreakdown.map(s => `
+${subjectBreakdown
+  .map(
+    (s) => `
 ${s.subject}: ${s.overall.toFixed(1)} (средний балл)
   Темы:
-${s.topics.map(t => `    - ${t.name}: ${t.grade} (${t.status})`).join('\n')}
-`).join('\n')}
+${s.topics.map((t) => `    - ${t.name}: ${t.grade} (${t.status})`).join("\n")}
+`
+  )
+  .join("\n")}
 
 ПРОБЛЕМНЫЕ ТЕМЫ (оценка < 75):
-${problemTopics.length > 0 
-  ? problemTopics.map(p => `- ${p.subject} / ${p.topic}: ${p.grade}`).join('\n')
-  : 'Нет проблемных тем'}
+${
+  problemTopics.length > 0
+    ? problemTopics
+        .map((p) => `- ${p.subject} / ${p.topic}: ${p.grade}`)
+        .join("\n")
+    : "Нет проблемных тем"
+}
 
 ЗАДАЧА:
 Проведи глубокий анализ студента и предоставь:
@@ -100,70 +109,67 @@ ${problemTopics.length > 0
     }
   ]
 }
-`;
+`
 
-    // Call DeepSeek API
-    let analysis: StudentDetailedAnalysis;
-    
+    let analysis: StudentDetailedAnalysis
+
     try {
       analysis = await deepseek.chatJSON<StudentDetailedAnalysis>(prompt, {
         temperature: 0.7,
-        maxTokens: 4000
-      });
+        maxTokens: 4000,
+      })
     } catch (aiError: any) {
-      console.error('DeepSeek API error:', aiError);
+      console.error("DeepSeek API error:", aiError)
       return NextResponse.json<AnalyzeStudentResponse>(
-        { 
-          success: false, 
-          error: `AI analysis failed: ${aiError.message}` 
+        {
+          success: false,
+          error: `AI analysis failed: ${aiError.message}`,
         },
         { status: 500 }
-      );
+      )
     }
-    
-    // Validate response structure
+
     if (!analysis.studentId || !analysis.studentName) {
-      console.error('Invalid analysis structure:', analysis);
+      console.error("Invalid analysis structure:", analysis)
       return NextResponse.json<AnalyzeStudentResponse>(
-        { 
-          success: false, 
-          error: 'AI returned invalid data structure' 
+        {
+          success: false,
+          error: "AI returned invalid data structure",
         },
         { status: 500 }
-      );
+      )
     }
-    
-    console.log(`Student analysis completed for ${student.name}`);
-    
+
+    console.log(`Student analysis completed for ${student.name}`)
+
     return NextResponse.json<AnalyzeStudentResponse>(
-      { 
-        success: true, 
-        data: analysis 
+      {
+        success: true,
+        data: analysis,
       },
       { status: 200 }
-    );
-    
+    )
   } catch (error: any) {
-    console.error('Unexpected error in analyze-student:', error);
+    console.error("Unexpected error in analyze-student:", error)
     return NextResponse.json<AnalyzeStudentResponse>(
-      { 
-        success: false, 
-        error: 'Internal server error' 
+      {
+        success: false,
+        error: "Internal server error",
       },
       { status: 500 }
-    );
+    )
   }
 }
 
-// GET endpoint for API info
 export async function GET() {
   return NextResponse.json({
-    message: 'Student Analysis API',
-    description: 'Provides detailed analysis of a specific student using DeepSeek AI',
-    endpoint: '/api/analyze-student',
-    method: 'POST',
+    message: "Student Analysis API",
+    description:
+      "Provides detailed analysis of a specific student using DeepSeek AI",
+    endpoint: "/api/analyze-student",
+    method: "POST",
     requiredBody: {
-      student: 'Student object with detailed grade breakdown'
-    }
-  });
+      student: "Student object with detailed grade breakdown",
+    },
+  })
 }

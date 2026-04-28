@@ -1,43 +1,60 @@
 "use client"
 
-import { ClassAnalytics } from "@/lib/types";
-import { BarChart3, PieChart as PieChartIcon } from "lucide-react";
-import { Bar, BarChart, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Legend } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui";
+import { ClassAnalytics } from "@/lib/types"
+import { BarChart3, PieChart as PieChartIcon } from "lucide-react"
+import {
+  Bar,
+  BarChart,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Legend,
+} from "recharts"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "../ui"
 
 interface ChartsProps {
-  analytics: ClassAnalytics;
+  analytics: ClassAnalytics
 }
 
 export const Charts = ({ analytics }: ChartsProps) => {
-  const { overview } = analytics;
-  const { subjectDistribution } = overview;
+  const { overview } = analytics
+  const { subjectDistribution } = overview
 
-  // Prepare data for visualization
-  const chartData = Object.entries(subjectDistribution).map(([name, count]) => ({
-    subject: getSubjectLabel(name),
-    count,
-    fill: getChartColor(name),
-  }));
+  const chartData = Object.entries(subjectDistribution).map(
+    ([name, count]) => ({
+      subject: getSubjectLabel(name),
+      count,
+      fill: getChartColor(name),
+    })
+  )
 
-  // Sort by count descending
-  const sortedData = [...chartData].sort((a, b) => b.count - a.count);
+  const sortedData = [...chartData].sort((a, b) => b.count - a.count)
 
-  // Chart configuration for shadcn
   const chartConfig = {
     count: {
       label: "Студентов",
     },
-  };
+  }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Bar chart */}
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-white" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
+              <BarChart3 className="h-5 w-5 text-white" />
             </div>
             <span>Распределение по интересам</span>
           </CardTitle>
@@ -48,7 +65,10 @@ export const Charts = ({ analytics }: ChartsProps) => {
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={sortedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <BarChart
+                data={sortedData}
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              >
                 <XAxis
                   dataKey="subject"
                   fontSize={12}
@@ -58,16 +78,9 @@ export const Charts = ({ analytics }: ChartsProps) => {
                   textAnchor="end"
                   height={80}
                 />
-                <YAxis
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <YAxis fontSize={12} tickLine={false} axisLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar
-                  dataKey="count"
-                  radius={[8, 8, 0, 0]}
-                >
+                <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                   {sortedData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
@@ -78,12 +91,11 @@ export const Charts = ({ analytics }: ChartsProps) => {
         </CardContent>
       </Card>
 
-      {/* Pie chart */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-              <PieChartIcon className="w-5 h-5 text-white" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600">
+              <PieChartIcon className="h-5 w-5 text-white" />
             </div>
             <span>Популярные направления</span>
           </CardTitle>
@@ -121,10 +133,9 @@ export const Charts = ({ analytics }: ChartsProps) => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-// Helper functions
 function getSubjectLabel(name: string): string {
   const labels: Record<string, string> = {
     math: "Математика",
@@ -136,8 +147,8 @@ function getSubjectLabel(name: string): string {
     literature: "Литература",
     history: "История",
     english: "Английский",
-  };
-  return labels[name] || name;
+  }
+  return labels[name] || name
 }
 
 function getChartColor(name: string): string {
@@ -151,12 +162,11 @@ function getChartColor(name: string): string {
     literature: "hsl(199, 89%, 48%)", // cyan
     history: "hsl(239, 84%, 67%)", // indigo
     english: "hsl(48, 96%, 53%)", // yellow
-  };
-  return colors[name] || "hsl(0, 0%, 50%)";
+  }
+  return colors[name] || "hsl(0, 0%, 50%)"
 }
 
-// Custom label for pie chart
 function renderCustomLabel(entry: any) {
-  const percent = ((entry.count / entry.payload.total) * 100).toFixed(0);
-  return `${percent}%`;
-};
+  const percent = ((entry.count / entry.payload.total) * 100).toFixed(0)
+  return `${percent}%`
+}

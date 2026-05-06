@@ -117,14 +117,13 @@ ${
 
     let recommendations: StudentRecommendations
 
+    let recommendations: StudentRecommendations;
+
     try {
-      recommendations = await deepseek.chatJSON<StudentRecommendations>(
-        prompt,
-        {
-          temperature: 0.8,
-          maxTokens: 4000,
-        }
-      )
+      recommendations = await deepseek.chatJSON<StudentRecommendations>(prompt, {
+        temperature: 0.8, // Slightly higher for creativity in recommendations
+        maxTokens: 8000,
+      });
     } catch (aiError: any) {
       console.error("DeepSeek API error:", aiError)
       return NextResponse.json<RecommendationsResponse>(
@@ -156,10 +155,11 @@ ${
     return NextResponse.json<RecommendationsResponse>(
       {
         success: true,
-        data: recommendations,
+        data: recommendations
       },
       { status: 200 }
-    )
+    );
+
   } catch (error: any) {
     console.error("Unexpected error in generate-recommendations:", error)
     return NextResponse.json<RecommendationsResponse>(

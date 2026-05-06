@@ -111,13 +111,16 @@ ${
 }
 `
 
-    let analysis: StudentDetailedAnalysis
+    let studentAnalysis: StudentDetailedAnalysis
 
     try {
-      analysis = await deepseek.chatJSON<StudentDetailedAnalysis>(prompt, {
-        temperature: 0.7,
-        maxTokens: 4000,
-      })
+      studentAnalysis = await deepseek.chatJSON<StudentDetailedAnalysis>(
+        prompt,
+        {
+          temperature: 0.7,
+          maxTokens: 4000,
+        }
+      )
     } catch (aiError: any) {
       console.error("DeepSeek API error:", aiError)
       return NextResponse.json<AnalyzeStudentResponse>(
@@ -129,8 +132,8 @@ ${
       )
     }
 
-    if (!analysis.studentId || !analysis.studentName) {
-      console.error("Invalid analysis structure:", analysis)
+    if (!studentAnalysis.studentId || !studentAnalysis.studentName) {
+      console.error("Invalid analysis structure:", studentAnalysis)
       return NextResponse.json<AnalyzeStudentResponse>(
         {
           success: false,
@@ -145,7 +148,7 @@ ${
     return NextResponse.json<AnalyzeStudentResponse>(
       {
         success: true,
-        data: analysis,
+        data: studentAnalysis,
       },
       { status: 200 }
     )

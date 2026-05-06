@@ -9,7 +9,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useStudentsStore } from "@/store/useStudentsStore"
 import { Student, ClassAnalytics } from "@/lib/types"
 
@@ -25,6 +25,7 @@ const UploadPage = () => {
 
   const router = useRouter()
   const { setAnalyticsData } = useStudentsStore()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -225,17 +226,17 @@ const UploadPage = () => {
                         className="hidden"
                         id="file-upload"
                         disabled={isUploading}
+                        ref={fileInputRef}
                       />
-                      <label htmlFor="file-upload">
-                        <button
-                          type="button"
-                          disabled={isUploading}
-                          className="inline-flex cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <FileSpreadsheet className="mr-2 h-4 w-4" />
-                          Выбрать файл
-                        </button>
-                      </label>
+                      <button
+                        type="button"
+                        disabled={isUploading}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <FileSpreadsheet className="mr-2 h-4 w-4" />
+                        Выбрать файл
+                      </button>
                     </>
                   )}
                 </div>

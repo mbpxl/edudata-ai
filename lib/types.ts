@@ -129,3 +129,50 @@ export interface RecommendationsResponse {
   data?: StudentRecommendations
   error?: string
 }
+
+export type InsightType = "info" | "warning" | "success" | "danger"
+
+export interface AIInsight {
+  icon: string
+  type: InsightType
+  title: string
+  description: string
+  affectedCount?: number
+  affectedStudents?: string[]
+}
+
+export interface AIInsightsData {
+  insights: AIInsight[]
+}
+
+export interface AIInsightsResponse {
+  success: boolean
+  data?: AIInsightsData
+  error?: string
+}
+
+export type GroupType =
+  | "peer_learning"
+  | "support"
+  | "olympiad"
+  | "cross_subject"
+
+export interface StudentGroup {
+  type: GroupType
+  icon: string
+  title: string
+  description: string
+  students: string[] // student names
+  rationale: string
+}
+
+export interface SmartGroupingData {
+  groups: StudentGroup[]
+  summary: string
+}
+
+export interface SmartGroupingResponse {
+  success: boolean
+  data?: SmartGroupingData
+  error?: string
+}

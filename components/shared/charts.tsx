@@ -42,10 +42,17 @@ export const Charts = ({ analytics }: ChartsProps) => {
 
   const sortedData = [...chartData].sort((a, b) => b.count - a.count)
 
+  const totalCount = sortedData.reduce((sum, item) => sum + item.count, 0)
+
   const chartConfig = {
     count: {
       label: "Студентов",
     },
+  }
+
+  const renderCustomLabel = (entry: any) => {
+    const percent = ((entry.count / totalCount) * 100).toFixed(0)
+    return `${percent}%`
   }
 
   return (
@@ -104,7 +111,7 @@ export const Charts = ({ analytics }: ChartsProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px]">
+          <ChartContainer config={chartConfig} className="h-75">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -153,20 +160,15 @@ function getSubjectLabel(name: string): string {
 
 function getChartColor(name: string): string {
   const colors: Record<string, string> = {
-    math: "hsl(221, 83%, 53%)", // blue
-    physics: "hsl(262, 83%, 58%)", // purple
-    humanities: "hsl(340, 82%, 52%)", // pink
-    sciences: "hsl(142, 71%, 45%)", // green
-    chemistry: "hsl(25, 95%, 53%)", // orange
-    biology: "hsl(173, 58%, 39%)", // teal
-    literature: "hsl(199, 89%, 48%)", // cyan
-    history: "hsl(239, 84%, 67%)", // indigo
-    english: "hsl(48, 96%, 53%)", // yellow
+    math: "hsl(221, 83%, 53%)",
+    physics: "hsl(262, 83%, 58%)",
+    humanities: "hsl(340, 82%, 52%)",
+    sciences: "hsl(142, 71%, 45%)",
+    chemistry: "hsl(25, 95%, 53%)",
+    biology: "hsl(173, 58%, 39%)",
+    literature: "hsl(199, 89%, 48%)",
+    history: "hsl(239, 84%, 67%)",
+    english: "hsl(48, 96%, 53%)",
   }
   return colors[name] || "hsl(0, 0%, 50%)"
-}
-
-function renderCustomLabel(entry: any) {
-  const percent = ((entry.count / entry.payload.total) * 100).toFixed(0)
-  return `${percent}%`
 }

@@ -1,11 +1,13 @@
 "use client"
 
 import {
+  AIInsights,
   Container,
   CenteredLayout,
   Charts,
   ClassOverview,
   StudentsTable,
+  SmartGrouping,
 } from "@/components/shared"
 import { useStudentsStore } from "@/store/useStudentsStore"
 import { useRouter } from "next/navigation"
@@ -89,13 +91,21 @@ const AnalyticsPage = () => {
           <section>
             <ClassOverview analytics={classAnalytics} />
           </section>
-
           <section>
             <Charts analytics={classAnalytics} />
           </section>
-
           <section>
             <StudentsTable students={students} analytics={classAnalytics} />
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-xl font-bold text-gray-900">
+              ✨ Расширенный AI-анализ
+            </h2>
+            <div className="grid gap-6 xl:grid-cols-2">
+              <AIInsights />
+              <SmartGrouping />
+            </div>
           </section>
         </div>
 

@@ -165,7 +165,7 @@ export const StudentProfile = ({ student, analysis }: StudentProfileProps) => {
               <div>
                 <div className="text-xs font-medium text-gray-600">Участие</div>
                 <div className="text-lg font-bold text-gray-900">
-                  {student.participationScore}/10
+                  {student.participationScore}/5
                 </div>
               </div>
             </div>

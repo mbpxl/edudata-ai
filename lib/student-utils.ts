@@ -62,7 +62,7 @@ export function parseSubjectBreakdown(student: Student): SubjectBreakdown[] {
 
 export function getProblemTopics(
   student: Student,
-  threshold: number = 75
+  threshold: number = 3.5
 ): Array<{
   subject: string
   topic: string
@@ -164,9 +164,9 @@ function formatTopicName(topic: string): string {
 function getGradeStatus(
   grade: number
 ): "excellent" | "good" | "needs_improvement" | "critical" {
-  if (grade >= 90) return "excellent"
-  if (grade >= 75) return "good"
-  if (grade >= 60) return "needs_improvement"
+  if (grade >= 4.5) return "excellent"
+  if (grade >= 3.5) return "good"
+  if (grade >= 2.5) return "needs_improvement"
   return "critical"
 }
 
@@ -178,7 +178,7 @@ function calculateTrend(
       ? topics.reduce((sum, t) => sum + t.grade, 0) / topics.length
       : 0
 
-  if (avgGrade >= 85) return "improving"
-  if (avgGrade >= 70) return "stable"
+  if (avgGrade >= 4.2) return "improving"
+  if (avgGrade >= 3.5) return "stable"
   return "declining"
 }

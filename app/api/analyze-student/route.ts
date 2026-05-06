@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
 Email: ${student.email || "не указан"}
 Средний балл: ${averageGrade.toFixed(1)}
 Посещаемость: ${student.attendance || "н/д"}%
-Поведение (1-10): ${student.behaviorScore || "н/д"}
-Участие в уроках (1-10): ${student.participationScore || "н/д"}
+Поведение (1-5): ${student.behaviorScore || "н/д"}
+Участие в уроках (1-5): ${student.participationScore || "н/д"}
 Выполнение домашних заданий: ${student.homeworkCompletion || "н/д"}%
 
 ДЕТАЛЬНАЯ УСПЕВАЕМОСТЬ ПО ПРЕДМЕТАМ:
@@ -51,7 +51,7 @@ ${s.topics.map((t) => `    - ${t.name}: ${t.grade} (${t.status})`).join("\n")}
   )
   .join("\n")}
 
-ПРОБЛЕМНЫЕ ТЕМЫ (оценка < 75):
+ПРОБЛЕМНЫЕ ТЕМЫ (оценка < 3.5):
 ${
   problemTopics.length > 0
     ? problemTopics

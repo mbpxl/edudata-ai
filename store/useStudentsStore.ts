@@ -5,6 +5,8 @@ import {
   ClassAnalytics,
   StudentDetailedAnalysis,
   StudentRecommendations,
+  AIInsightsData,
+  SmartGroupingData,
 } from "@/lib/types"
 
 interface StudentsStore {
@@ -15,9 +17,14 @@ interface StudentsStore {
   selectedStudentAnalysis: StudentDetailedAnalysis | null
   selectedStudentRecommendations: StudentRecommendations | null
 
+  aiInsights: AIInsightsData | null
+  smartGrouping: SmartGroupingData | null
+
   isLoadingAnalytics: boolean
   isLoadingStudentDetails: boolean
   isLoadingRecommendations: boolean
+  isLoadingInsights: boolean
+  isLoadingGrouping: boolean
 
   error: string | null
 
@@ -26,27 +33,33 @@ interface StudentsStore {
   setSelectedStudent: (studentId: string) => void
   setStudentAnalysis: (analysis: StudentDetailedAnalysis) => void
   setStudentRecommendations: (recommendations: StudentRecommendations) => void
+  setAIInsights: (insights: AIInsightsData) => void
+  setSmartGrouping: (grouping: SmartGroupingData) => void
+  setIsLoadingInsights: (loading: boolean) => void
+  setIsLoadingGrouping: (loading: boolean) => void
   setError: (error: string | null) => void
   clearAll: () => void
-
   setAnalyticsData: (students: Student[], analytics: ClassAnalytics) => void
 }
 
 export const useStudentsStore = create<StudentsStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       students: [],
       classAnalytics: null,
       selectedStudentId: null,
       selectedStudentAnalysis: null,
       selectedStudentRecommendations: null,
+      aiInsights: null,
+      smartGrouping: null,
       isLoadingAnalytics: false,
       isLoadingStudentDetails: false,
       isLoadingRecommendations: false,
+      isLoadingInsights: false,
+      isLoadingGrouping: false,
       error: null,
 
       setStudents: (students) => set({ students }),
-
       setClassAnalytics: (analytics) => set({ classAnalytics: analytics }),
 
       setSelectedStudent: (studentId) =>
@@ -60,9 +73,12 @@ export const useStudentsStore = create<StudentsStore>()(
         set({ selectedStudentAnalysis: analysis }),
 
       setStudentRecommendations: (recommendations) =>
-        set({
-          selectedStudentRecommendations: recommendations,
-        }),
+        set({ selectedStudentRecommendations: recommendations }),
+
+      setAIInsights: (insights) => set({ aiInsights: insights }),
+      setSmartGrouping: (grouping) => set({ smartGrouping: grouping }),
+      setIsLoadingInsights: (loading) => set({ isLoadingInsights: loading }),
+      setIsLoadingGrouping: (loading) => set({ isLoadingGrouping: loading }),
 
       setError: (error) => set({ error }),
 
@@ -73,15 +89,13 @@ export const useStudentsStore = create<StudentsStore>()(
           selectedStudentId: null,
           selectedStudentAnalysis: null,
           selectedStudentRecommendations: null,
+          aiInsights: null,
+          smartGrouping: null,
           error: null,
         }),
 
       setAnalyticsData: (students, analytics) =>
-        set({
-          students,
-          classAnalytics: analytics,
-          error: null,
-        }),
+        set({ students, classAnalytics: analytics, error: null }),
     }),
     {
       name: "students-storage",

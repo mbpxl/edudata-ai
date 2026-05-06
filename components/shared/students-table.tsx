@@ -29,9 +29,11 @@ export const StudentsTable = ({ students, analytics }: StudentsTableProps) => {
   const router = useRouter()
 
   const studentsWithRecommendations = useMemo(() => {
+    console.log(analytics)
+
     return students.map((student) => {
       const recommendation = analytics.studentsQuickRecommendations.find(
-        (rec) => rec.id === student.id
+        (rec) => rec.id === student.id || rec.id === `student-${student.id}`
       )
 
       const grades = Object.values(student.grades).filter(
@@ -54,20 +56,18 @@ export const StudentsTable = ({ students, analytics }: StudentsTableProps) => {
     router.push(`/student/${studentId}`)
   }
 
-  const getGradeBadgeVariant = (
-    grade: number
-  ): "default" | "secondary" | "destructive" | "outline" => {
-    if (grade >= 90) return "default"
-    if (grade >= 75) return "secondary"
-    if (grade >= 60) return "outline"
-    return "destructive" // Red
+  const getGradeBadgeVariant = (grade: number) => {
+    if (grade >= 4.5) return "default"
+    if (grade >= 3.5) return "secondary"
+    if (grade >= 2.5) return "outline"
+    return "destructive"
   }
 
   const getGradeLabel = (grade: number) => {
-    if (grade >= 90) return "Отлично"
-    if (grade >= 75) return "Хорошо"
-    if (grade >= 60) return "Удовл."
-    return "Требует внимания"
+    if (grade >= 4.5) return "Отлично"
+    if (grade >= 3.5) return "Хорошо"
+    if (grade >= 2.5) return "Удовл."
+    return "Неуд."
   }
 
   return (

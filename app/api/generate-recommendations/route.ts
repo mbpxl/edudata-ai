@@ -115,15 +115,16 @@ ${
 }
 `
 
-    let recommendations: StudentRecommendations
-
-    let recommendations: StudentRecommendations;
+    let Studentrecommendations: StudentRecommendations
 
     try {
-      recommendations = await deepseek.chatJSON<StudentRecommendations>(prompt, {
-        temperature: 0.8, // Slightly higher for creativity in recommendations
-        maxTokens: 8000,
-      });
+      Studentrecommendations = await deepseek.chatJSON<StudentRecommendations>(
+        prompt,
+        {
+          temperature: 0.8,
+          maxTokens: 8000,
+        }
+      )
     } catch (aiError: any) {
       console.error("DeepSeek API error:", aiError)
       return NextResponse.json<RecommendationsResponse>(
@@ -136,11 +137,14 @@ ${
     }
 
     if (
-      !recommendations.studentId ||
-      !recommendations.topicsToStudy ||
-      !recommendations.actionPlan
+      !Studentrecommendations.studentId ||
+      !Studentrecommendations.topicsToStudy ||
+      !Studentrecommendations.actionPlan
     ) {
-      console.error("Invalid recommendations structure:", recommendations)
+      console.error(
+        "Invalid recommendations structure:",
+        Studentrecommendations
+      )
       return NextResponse.json<RecommendationsResponse>(
         {
           success: false,
@@ -155,11 +159,10 @@ ${
     return NextResponse.json<RecommendationsResponse>(
       {
         success: true,
-        data: recommendations
+        data: Studentrecommendations,
       },
       { status: 200 }
-    );
-
+    )
   } catch (error: any) {
     console.error("Unexpected error in generate-recommendations:", error)
     return NextResponse.json<RecommendationsResponse>(

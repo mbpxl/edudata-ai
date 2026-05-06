@@ -118,7 +118,7 @@ ${
         prompt,
         {
           temperature: 0.7,
-          maxTokens: 4000,
+          maxTokens: 8000,
         }
       )
     } catch (aiError: any) {

@@ -113,11 +113,14 @@ ${
 
     let analysis: StudentDetailedAnalysis
 
+    // Call DeepSeek API
+    let analysis: StudentDetailedAnalysis;
+
     try {
       analysis = await deepseek.chatJSON<StudentDetailedAnalysis>(prompt, {
         temperature: 0.7,
-        maxTokens: 4000,
-      })
+        maxTokens: 8000,
+      });
     } catch (aiError: any) {
       console.error("DeepSeek API error:", aiError)
       return NextResponse.json<AnalyzeStudentResponse>(
